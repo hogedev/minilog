@@ -21,7 +21,7 @@ jobs:
 
       - name: Build
         env:
-          VITE_API_URL: http://136.117.59.40:8000/api/v1
+          VITE_API_URL: https://minilog-api.honya.dev/api/v1
         run: npm run build
 
       - name: Deploy to Netlify
