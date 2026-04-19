@@ -4,7 +4,7 @@ import { photoUrl } from "../api/client";
 import { formatDateHeader, formatJstDateTime } from "../lib/date-utils";
 
 export default function EntryPage() {
-  const { id } = useParams<{ id: string }>();
+  const { id, username } = useParams<{ id: string; username?: string }>();
   const { data: entry, isLoading } = usePublicEntry(Number(id));
 
   if (isLoading) {
@@ -23,7 +23,7 @@ export default function EntryPage() {
 
   return (
     <article className="space-y-6">
-      <Link to="/" className="text-sm text-accent hover:underline inline-block">
+      <Link to={username ? `/${username}` : "/"} className="text-sm text-accent hover:underline inline-block">
         &larr; Back
       </Link>
 

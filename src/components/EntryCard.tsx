@@ -3,13 +3,14 @@ import { photoUrl } from "../api/client";
 import { formatJstTime } from "../lib/date-utils";
 import type { Entry } from "../types";
 
-export function EntryCard({ entry }: { entry: Entry }) {
+export function EntryCard({ entry, username }: { entry: Entry; username?: string }) {
   const hasPhotos = entry.photos.length > 0;
   const time = formatJstTime(entry.created_at);
+  const linkTo = username ? `/${username}/${entry.id}` : `/entries/${entry.id}`;
 
   return (
     <Link
-      to={`/entries/${entry.id}`}
+      to={linkTo}
       className="block bg-surface-1 rounded-xl border border-border overflow-hidden hover:shadow-md transition-shadow"
     >
       {hasPhotos && (

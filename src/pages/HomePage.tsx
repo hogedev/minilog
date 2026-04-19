@@ -1,3 +1,4 @@
+import { useParams } from "react-router-dom";
 import { usePublicEntries } from "../hooks/usePublicEntries";
 import { EntryCard } from "../components/EntryCard";
 import { formatDateHeader } from "../lib/date-utils";
@@ -14,7 +15,8 @@ function groupByDate(entries: Entry[]): Map<string, Entry[]> {
 }
 
 export default function HomePage() {
-  const { data, isLoading, error } = usePublicEntries({ limit: 50 });
+  const { username } = useParams<{ username?: string }>();
+  const { data, isLoading, error } = usePublicEntries({ username, limit: 50 });
 
   if (isLoading) {
     return (
@@ -44,6 +46,11 @@ export default function HomePage() {
 
   return (
     <div className="space-y-8">
+      {username && (
+        <h2 className="text-lg font-semibold text-[var(--c-text-strong)]">
+          {username}
+        </h2>
+      )}
       {Array.from(groups.entries()).map(([date, entries]) => (
         <section key={date}>
           <h2 className="text-sm font-semibold text-[var(--c-text-muted)] mb-3 uppercase tracking-wide">
@@ -51,7 +58,7 @@ export default function HomePage() {
           </h2>
           <div className="space-y-4">
             {entries.map((entry) => (
-              <EntryCard key={entry.id} entry={entry} />
+              <EntryCard key={entry.id} entry={entry} username={username} />
             ))}
           </div>
         </section>
