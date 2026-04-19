@@ -1,0 +1,16 @@
+services:
+  viewer:
+    image: gitea.honya.dev/honya-dev-minilog/minilog:latest
+    container_name: minilog
+    restart: unless-stopped
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.minilog.rule=Host(`minilog.honya.dev`)"
+      - "traefik.http.routers.minilog.entrypoints=internal"
+      - "traefik.http.services.minilog.loadbalancer.server.port=8099"
+
+networks:
+  traefik:
+    external: true

@@ -1,0 +1,56 @@
+when:
+  - event: [push, manual]
+    branch: main
+
+steps:
+  - name: install
+    image: node:22-alpine
+    commands:
+      - npm ci
+
+  - name: lint
+    image: node:22-alpine
+    commands:
+      - npm run lint
+
+  - name: typecheck
+    image: node:22-alpine
+    commands:
+      - npx tsc --noEmit
+
+  - name: build
+    image: node:22-alpine
+    environment:
+      VITE_API_URL: https://minilog-api.honya.dev/api/v1
+    commands:
+      - npm run build -- --base=/
+      - cp dist/index.html dist/404.html
+
+  - name: docker-build-push
+    image: docker:cli
+    environment:
+      REGISTRY_USER:
+        from_secret: gitea_username
+      REGISTRY_PASS:
+        from_secret: gitea_token
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+      - docker login -u $REGISTRY_USER -p $REGISTRY_PASS gitea.honya.dev
+      - docker build -t gitea.honya.dev/honya-dev-minilog/minilog:latest .
+      - docker push gitea.honya.dev/honya-dev-minilog/minilog:latest
+
+  - name: deploy
+    image: docker:cli
+    environment:
+      REGISTRY_USER:
+        from_secret: gitea_username
+      REGISTRY_PASS:
+        from_secret: gitea_token
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/honya/minilog:/home/honya/minilog
+    commands:
+      - docker login -u $REGISTRY_USER -p $REGISTRY_PASS gitea.honya.dev
+      - docker compose -f /home/honya/minilog/docker-compose.yml pull
+      - docker compose -f /home/honya/minilog/docker-compose.yml up -d --force-recreate
