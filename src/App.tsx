@@ -12,7 +12,7 @@ function App() {
   }, [siteName]);
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
+    <div className="max-w-2xl md:max-w-3xl mx-auto px-4 py-8">
       <header className="mb-8">
         <Link
           to="/"
