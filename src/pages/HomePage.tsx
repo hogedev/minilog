@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { usePublicEntries } from "../hooks/usePublicEntries";
 import { EntryCard } from "../components/EntryCard";
@@ -17,6 +18,11 @@ function groupByDate(entries: Entry[]): Map<string, Entry[]> {
 export default function HomePage() {
   const { username } = useParams<{ username?: string }>();
   const { data, isLoading, error } = usePublicEntries({ username, limit: 50 });
+
+  useEffect(() => {
+    if (username) document.title = `${username}日記`;
+    return () => { document.title = "minilog"; };
+  }, [username]);
 
   if (isLoading) {
     return (
@@ -48,7 +54,7 @@ export default function HomePage() {
     <div className="space-y-8">
       {username && (
         <h2 className="text-lg font-semibold text-[var(--c-text-strong)]">
-          {username}
+          {username}日記
         </h2>
       )}
       {Array.from(groups.entries()).map(([date, entries]) => (
