@@ -23,7 +23,10 @@ export default function EntryPage() {
 
   return (
     <article className="space-y-6">
-      <Link to={username ? `/${username}` : "/"} className="text-sm text-accent hover:underline inline-block">
+      <Link
+        to={username ? `/${username}` : "/"}
+        className="text-sm text-accent hover:underline inline-block"
+      >
         &larr; Back
       </Link>
 
@@ -39,13 +42,19 @@ export default function EntryPage() {
       {entry.photos.length > 0 && (
         <div className="space-y-3">
           {entry.photos.map((photo) => (
-            <img
-              key={photo.id}
-              src={photoUrl(photo.id)}
-              alt={photo.original_filename || ""}
-              className="w-full rounded-xl"
-              loading="lazy"
-            />
+            <figure key={photo.id}>
+              <img
+                src={photoUrl(photo.id)}
+                alt={photo.caption || photo.original_filename || ""}
+                className="w-full rounded-xl"
+                loading="lazy"
+              />
+              {photo.caption && (
+                <figcaption className="text-sm text-[var(--c-text-muted)] mt-1 text-center">
+                  {photo.caption}
+                </figcaption>
+              )}
+            </figure>
           ))}
         </div>
       )}
