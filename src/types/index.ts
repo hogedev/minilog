@@ -8,6 +8,12 @@ export interface Photo {
   created_at: string;
 }
 
+export interface EntryAuthor {
+  username: string;
+  display_name: string | null;
+  has_avatar: boolean;
+}
+
 export interface Entry {
   id: number;
   text: string | null;
@@ -17,6 +23,14 @@ export interface Entry {
   photos: Photo[];
   created_at: string;
   updated_at: string;
+  author: EntryAuthor | null;
+}
+
+export interface PublicUser {
+  username: string;
+  display_name: string | null;
+  bio: string | null;
+  has_avatar: boolean;
 }
 
 export interface PaginatedResponse<T> {

@@ -12,3 +12,7 @@ export function photoUrl(photoId: number, thumb?: boolean): string {
   const w = thumb ? "?w=800" : "";
   return `${API_URL}/public/photos/${photoId}/image${w}`;
 }
+
+export function avatarUrl(username: string): string {
+  return `${API_URL}/public/users/${username}/avatar`;
+}
